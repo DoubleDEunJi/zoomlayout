@@ -199,10 +199,10 @@ public class ZoomLayout extends FrameLayout {
         return super.dispatchTouchEvent(ev);
     }
 
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
-        return mAllowZoom;
-    }
+//    @Override
+//    public boolean onInterceptTouchEvent(MotionEvent ev) {
+//        return mAllowZoom;
+//    }
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
