@@ -8,7 +8,6 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Build;
-import androidx.core.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -19,6 +18,8 @@ import android.view.ViewTreeObserver;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.FrameLayout;
+
+import androidx.core.view.ViewCompat;
 
 import com.shopgun.android.utils.NumberUtils;
 import com.shopgun.android.utils.log.L;
@@ -184,7 +185,7 @@ public class ZoomLayout extends FrameLayout {
         return a;
     }
 
-    private float[] screenPointsToScaledPoints(float[] a){
+    private float[] screenPointsToScaledPoints(float[] a) {
         mTranslateMatrixInverse.mapPoints(a);
         mScaleMatrixInverse.mapPoints(a);
         return a;
@@ -199,10 +200,16 @@ public class ZoomLayout extends FrameLayout {
         return super.dispatchTouchEvent(ev);
     }
 
-//    @Override
-//    public boolean onInterceptTouchEvent(MotionEvent ev) {
-//        return mAllowZoom;
-//    }
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_POINTER_DOWN) return mAllowZoom;
+        if (ev.getAction() == MotionEvent.ACTION_POINTER_UP) return mAllowZoom;
+        if (ev.getAction() == MotionEvent.ACTION_MOVE &&
+                ev.getPointerCount() == 2
+        ) return mAllowZoom;
+
+        return false;
+    }
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
@@ -255,7 +262,7 @@ public class ZoomLayout extends FrameLayout {
                 case MotionEvent.ACTION_UP:
                     // re-enable this when quick scale is correctly implemented
 //                    if (NumberUtils.isEqual(getScale(), mScaleOnActionDown)) {
-                        dispatchOnDoubleTap(e);
+                    dispatchOnDoubleTap(e);
 //                    }
                     break;
             }
@@ -363,6 +370,7 @@ public class ZoomLayout extends FrameLayout {
      * to counter that we'll first read old translation values, then apply the new focus-point
      * (with the old scale), then read the new translation values. Lastly we'll ensureTranslation
      * out ensureTranslation-matrix by the delta given by the scale-matrix translations.
+     *
      * @param focusX focus-focusX in screen coordinate
      * @param focusY focus-focusY in screen coordinate
      */
@@ -374,8 +382,8 @@ public class ZoomLayout extends FrameLayout {
         float x1 = getMatrixValue(mScaleMatrix, Matrix.MTRANS_X);
         float y1 = getMatrixValue(mScaleMatrix, Matrix.MTRANS_Y);
         internalScale(getScale(), mArray[0], mArray[1]);
-        float dX = getMatrixValue(mScaleMatrix, Matrix.MTRANS_X)-x1;
-        float dY = getMatrixValue(mScaleMatrix, Matrix.MTRANS_Y)-y1;
+        float dX = getMatrixValue(mScaleMatrix, Matrix.MTRANS_X) - x1;
+        float dY = getMatrixValue(mScaleMatrix, Matrix.MTRANS_Y) - y1;
         internalMove(dX + getPosX(), dY + getPosY(), false);
     }
 
@@ -476,7 +484,7 @@ public class ZoomLayout extends FrameLayout {
 
     public void setScale(float scale, boolean animate) {
         final View c = getChildAt(0);
-        setScale(scale, getRight()/2, getBottom()/2, animate);
+        setScale(scale, getRight() / 2, getBottom() / 2, animate);
     }
 
     public boolean isTranslating() {
@@ -588,6 +596,7 @@ public class ZoomLayout extends FrameLayout {
     /**
      * Gets the closest valid translation point, to the current {@link #getPosX() x} and
      * {@link #getPosY() y} coordinates.
+     *
      * @return the closest point
      */
     private PointF getClosestValidTranslationPoint() {
@@ -656,8 +665,9 @@ public class ZoomLayout extends FrameLayout {
 
     /**
      * Read a specific value from a given matrix
+     *
      * @param matrix The Matrix to read a value from
-     * @param value The value-position to read
+     * @param value  The value-position to read
      * @return The value at a given position
      */
     private float getMatrixValue(Matrix matrix, int value) {
@@ -1027,13 +1037,17 @@ public class ZoomLayout extends FrameLayout {
 
     public interface OnZoomListener {
         void onZoomBegin(ZoomLayout view, float scale);
+
         void onZoom(ZoomLayout view, float scale);
+
         void onZoomEnd(ZoomLayout view, float scale);
     }
 
     public interface OnPanListener {
         void onPanBegin(ZoomLayout view);
+
         void onPan(ZoomLayout view);
+
         void onPanEnd(ZoomLayout view);
     }
 
@@ -1092,8 +1106,8 @@ public class ZoomLayout extends FrameLayout {
             zoomLayout.mArray[1] = mAbsoluteY;
             zoomLayout.screenPointsToScaledPoints(zoomLayout.mArray);
             View v = zoomLayout.getChildAt(0);
-            mRelativeX = zoomLayout.mArray[0]-v.getLeft();
-            mRelativeY = zoomLayout.mArray[1]-v.getTop();
+            mRelativeX = zoomLayout.mArray[0] - v.getLeft();
+            mRelativeY = zoomLayout.mArray[1] - v.getTop();
             mPercentX = mRelativeX / (float) v.getWidth();
             mPercentY = mRelativeY / (float) v.getHeight();
             mContentClicked = zoomLayout.mDrawRect.contains(mAbsoluteX, mAbsoluteY);
