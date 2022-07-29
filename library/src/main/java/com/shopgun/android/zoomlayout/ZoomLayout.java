@@ -200,13 +200,46 @@ public class ZoomLayout extends FrameLayout {
         return super.dispatchTouchEvent(ev);
     }
 
+    long firstDown = 0L;
+    long secondDown = 0L;
+    boolean isSecondDown = false;
+
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        if (ev.getAction() == MotionEvent.ACTION_POINTER_DOWN) return mAllowZoom;
-        if (ev.getAction() == MotionEvent.ACTION_POINTER_UP) return mAllowZoom;
-        if (ev.getAction() == MotionEvent.ACTION_MOVE &&
-                ev.getPointerCount() == 2
-        ) return mAllowZoom;
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            firstDown = ev.getEventTime();
+            return false;
+        }
+
+        if (ev.getAction() == MotionEvent.ACTION_MOVE) {
+            if (isSecondDown && (secondDown - firstDown) < 200) {
+                return mAllowZoom;
+            }
+            if (System.currentTimeMillis() > firstDown + 200 && secondDown == 0) {
+                return false;
+            }
+        }
+        if (ev.getAction() == MotionEvent.ACTION_POINTER_DOWN) {
+            isSecondDown = true;
+            secondDown = ev.getEventTime();
+            return mAllowZoom;
+        }
+        if (ev.getAction() == MotionEvent.ACTION_POINTER_UP) {
+            firstDown = 0;
+            secondDown = 0;
+            isSecondDown = false;
+            return mAllowZoom;
+        }
+        if (ev.getAction() == MotionEvent.ACTION_UP) {
+            firstDown = 0;
+            secondDown = 0;
+            isSecondDown = false;
+            return false;
+        }
+
+//                ev.getAction() == MotionEvent.ACTION_MOVE &&
+//                ev.getPointerCount() == 2
+//        ) return mAllowZoom;
 
         return false;
     }

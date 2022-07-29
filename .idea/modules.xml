@@ -12,10 +12,6 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/sample/Desktop.zoomlayout.sample.main.iml" filepath="$PROJECT_DIR$/.idea/modules/sample/Desktop.zoomlayout.sample.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/sample/Desktop.zoomlayout.sample.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/sample/Desktop.zoomlayout.sample.unitTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1979066070/library.zoomlayout.markhor.iml" filepath="$PROJECT_DIR$/.idea/modules/-1979066070/library.zoomlayout.markhor.iml" />
-      <module fileurl="file://$PROJECT_DIR$/zoomlayout.iml" filepath="$PROJECT_DIR$/zoomlayout.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library/zoomlayout.library.iml" filepath="$PROJECT_DIR$/.idea/modules/library/zoomlayout.library.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1271692172/zoomlayout.markhor.iml" filepath="$PROJECT_DIR$/.idea/modules/1271692172/zoomlayout.markhor.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sample/zoomlayout.sample.iml" filepath="$PROJECT_DIR$/.idea/modules/sample/zoomlayout.sample.iml" />
     </modules>
   </component>
 </project>
